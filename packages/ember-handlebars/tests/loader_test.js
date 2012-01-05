@@ -1,59 +1,62 @@
 module("test Ember.Handlebars.bootstrap");
 
-test('template with data-template-name should add a new template to Ember.TEMPLATES', function() {
-    $('#qunit-fixture').html('<script type="text/html" data-template-name="funkyTemplate" >{{Tobias.firstName}} {{Tobias.lastName}}</script>');
+var handlebarScriptTypes = ['text/x-handlebars', 'text/x-raw-handlebars', 'text/html'];
 
-    Ember.run(function() {
-        Ember.Handlebars.bootstrap($('#qunit-fixture'));
-        Tobias = Ember.Object.create({
-            firstName: 'Tobias',
-            lastName: 'Fünke'
-        });
-    });
+handlebarScriptTypes.forEach(function(scriptType){
+	
+	test('[' + scriptType + '] template with data-template-name should add a new template to Ember.TEMPLATES', function() {
+	    $('#qunit-fixture').html('<script type="' + scriptType + '" data-template-name="funkyTemplate" >{{Tobias.firstName}} {{Tobias.lastName}}</script>');
 
-    ok(Ember.TEMPLATES['funkyTemplate'], 'template with name funkyTemplate available');
-    equals($('#qunit-fixture').text(), '', 'no template content is added');
-});
+	    Ember.run(function() {
+	        Ember.Handlebars.bootstrap($('#qunit-fixture'));
+	    });
 
-test('template with id instead of data-template-name should add a new template to Ember.TEMPLATES', function() {
-    $('#qunit-fixture').html('<script type="text/html" id="funkyTemplate" >{{Tobias.firstName}} takes {{Tobias.drug}}</script>');
+	    ok(Ember.TEMPLATES['funkyTemplate'], 'template with name funkyTemplate available');
+	    equals($('#qunit-fixture').text(), '', 'no template content is added');
+	});
 
-    Ember.run(function() {
-        Ember.Handlebars.bootstrap($('#qunit-fixture'));
-        Tobias = Ember.Object.create({
-            firstName: 'Tobias',
-            drug: 'teamocil'
-        });
-    });
+	test('[' + scriptType + '] template with id instead of data-template-name should add a new template to Ember.TEMPLATES', function() {
+	    $('#qunit-fixture').html('<script type="' + scriptType + '" id="funkyTemplate" >{{Tobias.firstName}} takes {{Tobias.drug}}</script>');
 
-    ok(Ember.TEMPLATES['funkyTemplate'], 'template with name funkyTemplate available');
-    equals($('#qunit-fixture').text(), '', 'no template content is added');
-});
+	    Ember.run(function() {
+	        Ember.Handlebars.bootstrap($('#qunit-fixture'));
+	    });
 
-test('inline template should be added', function() {
-    $('#qunit-fixture').html('<script type="text/x-handlebars" >{{Tobias.firstName}} {{Tobias.lastName}}</script>');
+	    ok(Ember.TEMPLATES['funkyTemplate'], 'template with name funkyTemplate available');
+	    equals($('#qunit-fixture').text(), '', 'no template content is added');
+	});
 
-    Ember.run(function() {
-        Ember.Handlebars.bootstrap($('#qunit-fixture'));
-        Tobias = Ember.Object.create({
-            firstName: 'Tobias',
-            lastName: 'Fünke'
-        });
-    });
+	test('[' + scriptType + '] inline template should be added', function() {
+	    $('#qunit-fixture').html('<script type="' + scriptType + '" >{{Tobias.firstName}} {{Tobias.lastName}}</script>');
 
-    equals($('#qunit-fixture').text(), 'Tobias Fünke', 'template is rendered');
-});
+	    Ember.run(function() {
+	        Ember.Handlebars.bootstrap($('#qunit-fixture'));
+	        Tobias = Ember.Object.create({
+	            firstName: 'Tobias',
+	            lastName: 'Fünke'
+	        });
+	    });
 
-test('template with data-tag-name should add a template, wrapped in specific tag', function() {
-    $('#qunit-fixture').html('<script type="text/x-handlebars" data-tag-name="h1" >{{Tobias.firstName}} takes {{Tobias.drug}}</script>');
+	    equals($('#qunit-fixture').text(), 'Tobias Fünke', 'template is rendered');
+	});
 
-    Ember.run(function() {
-        Ember.Handlebars.bootstrap($('#qunit-fixture'));
-        Tobias = Ember.Object.create({
-            firstName: 'Tobias',
-            drug: 'teamocil'
-        });
-    });
+	test('[' + scriptType + '] template with data-tag-name should add a template, wrapped in specific tag', function() {
+	    $('#qunit-fixture').html('<script type="' + scriptType + '" data-tag-name="h1" >{{Tobias.firstName}} takes {{Tobias.drug}}</script>');
 
-    equals($('#qunit-fixture h1').text(), 'Tobias takes teamocil', 'template is rendered inside custom tag');
+	    Ember.run(function() {
+	        Ember.Handlebars.bootstrap($('#qunit-fixture'));
+	        Tobias = Ember.Object.create({
+	            firstName: 'Tobias',
+	            drug: 'teamocil'
+	        });
+	    });
+
+	    equals($('#qunit-fixture h1').text(), 'Tobias takes teamocil', 'template is rendered inside custom tag');
+	});
+	
+	test('[' + scriptType + '] template definition stores all data-attr fields', function(){
+		
+		$('#qunit-fixture').html('<script type="' + scriptType + '" data-test >hello</script>');
+		
+	})
 });
