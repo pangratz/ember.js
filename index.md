@@ -9,8 +9,10 @@ title: Blogging Like a Hacker
 
 ### Bindings
 
-{% highlight ruby linenos %}
-def foo
-  puts 'foo'
-end
+{% highlight javascript linenos %}
+App = Ember.Application.create({});
+
+App.listController = Ember.ArrayProxy.create({
+	content: ['a', 'b']
+});
 {% endhighlight %}
