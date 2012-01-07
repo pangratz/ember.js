@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Blogging Like a Hacker
 ---
 
 # Welcome to ember.js Documentation
@@ -9,10 +8,10 @@ title: Blogging Like a Hacker
 
 ### Bindings
 
+{{ site.time | date_to_xmlschema }}
+
 {% highlight javascript linenos %}
 App = Ember.Application.create({});
 
-App.listController = Ember.ArrayProxy.create({
-	content: ['a', 'b']
-});
+App.myController = Ember.Object.create({});
 {% endhighlight %}
