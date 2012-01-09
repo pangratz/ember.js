@@ -1,2 +1,7 @@
 rvm:
   - 1.9.3
+  
+after_script:
+  - ./deploy-version.js
+  
+script: ./test.sh
