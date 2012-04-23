@@ -68,6 +68,16 @@ task :clean do
   puts "Done"
 end
 
+desc "Upload latest Ember.js build to URL"
+task :upload_to_url => :dist do
+  require 'rest_client'
+  
+  url = 'http://emberjs-uploader.herokuapp.com/upload'
+  
+  RestClient.post url, :name => 'ember-latest.js', :description => 'Ember.js Master', :file => File.new('dist/ember.js'), :content_tyoe => 'application/json'
+  RestClient.post url, :name => 'ember-latest.min.js', :description => 'Ember.js Master (minified)', :file => File.new('dist/ember.min.js'), :content_tyoe => 'application/json'
+end
+
 desc "Upload latest Ember.js build to GitHub repository"
 task :upload_latest => :dist do
   uploader = setup_uploader
