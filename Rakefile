@@ -73,9 +73,25 @@ task :upload_to_url => :dist do
   require 'rest_client'
   
   url = 'http://emberjs-uploader.herokuapp.com/upload'
-  
-  RestClient.post url, :name => 'ember-latest.js', :description => 'Ember.js Master', :file => File.new('dist/ember.js'), :content_tyoe => 'application/json'
-  RestClient.post url, :name => 'ember-latest.min.js', :description => 'Ember.js Master (minified)', :file => File.new('dist/ember.min.js'), :content_tyoe => 'application/json'
+  begin
+    RestClient.post url,
+      :name => 'ember-latest.js',
+      :description => 'Ember.js Master',
+      :file => File.new('dist/ember.js'),
+      :content_tyoe => 'application/json',
+      :timeout => 7
+    puts "uploaded ember-latest.js"
+
+    RestClient.post url,
+      :name => 'ember-latest.min.js',
+      :description => 'Ember.js Master (minified)',
+      :file => File.new('dist/ember.min.js'),
+      :content_tyoe => 'application/json',
+      :timeout => 7
+    puts "uploading ember-latest.min.js"
+  rescue => e
+    puts "error while uploading file: #{e.message}"
+  end
 end
 
 desc "Upload latest Ember.js build to GitHub repository"
