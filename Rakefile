@@ -93,6 +93,7 @@ task :upload_to_url => :dist do
   rescue => e
     puts "error while uploading file: #{e.message}"
   end
+
 end
 
 desc "Upload latest Ember.js build to GitHub repository"
