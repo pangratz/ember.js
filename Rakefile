@@ -78,7 +78,7 @@ task :upload_to_url => :dist do
       :name => 'ember-latest.js',
       :description => 'Ember.js Master',
       :file => File.new('dist/ember.js'),
-      :content_tyoe => 'application/json',
+      :content_type => 'application/json',
       :timeout => 7
     puts "uploaded ember-latest.js"
 
@@ -86,7 +86,7 @@ task :upload_to_url => :dist do
       :name => 'ember-latest.min.js',
       :description => 'Ember.js Master (minified)',
       :file => File.new('dist/ember.min.js'),
-      :content_tyoe => 'application/json',
+      :content_type => 'application/json',
       :timeout => 7
     puts "uploading ember-latest.min.js"
   rescue => e
