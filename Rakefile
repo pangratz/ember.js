@@ -73,6 +73,7 @@ task :upload_to_url => :dist do
   require 'rest_client'
   
   url = 'http://emberjs-uploader.herokuapp.com/upload'
+
   begin
     RestClient.post url,
       :name => 'ember-latest.js',
