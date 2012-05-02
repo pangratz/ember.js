@@ -72,7 +72,8 @@ desc "Upload latest Ember.js build to URL"
 task :upload_to_url => :dist do
   require 'rest_client'
 
-  puts `git symbolic-ref -q HEAD`
+  current_branch = `git symbolic-ref -q HEAD`
+  puts "current branch: #{current_branch}"
 
   url = 'http://emberjs-uploader.herokuapp.com/upload'
 
