@@ -342,37 +342,7 @@ EmberHandlebars.bindClasses = function(context, classBindings, view, bindAttrId,
   // determine which class string to return, based on whether it is
   // a Boolean or not.
   var classStringForProperty = function(property) {
-    var split = property.split(':'),
-        className = split[1];
-
-    property = split[0];
-
-    var val = property !== '' ? getPath(context, property, options) : true;
-
-    // If the value is truthy and we're using the colon syntax,
-    // we should return the className directly
-    if (!!val && className) {
-      return className;
-
-    // If value is a Boolean and true, return the dasherized property
-    // name.
-    } else if (val === true) {
-      // Normalize property path to be suitable for use
-      // as a class name. For exaple, content.foo.barBaz
-      // becomes bar-baz.
-      var parts = property.split('.');
-      return Ember.String.dasherize(parts[parts.length-1]);
-
-    // If the value is not false, undefined, or null, return the current
-    // value of the property.
-    } else if (val !== false && val !== undefined && val !== null) {
-      return val;
-
-    // Nothing to display. Return null so that the old class is removed
-    // but no new class is added.
-    } else {
-      return null;
-    }
+    return Ember.View.classStringForProperty(context, property);
   };
 
   // For each property passed, loop through and setup
@@ -420,7 +390,7 @@ EmberHandlebars.bindClasses = function(context, classBindings, view, bindAttrId,
       Ember.run.once(observer);
     };
 
-    var property = binding.split(':')[0];
+    var property = binding.split(/\?|:/)[0];
     if (property !== '') {
       Ember.addObserver(context, property, invoker);
     }
