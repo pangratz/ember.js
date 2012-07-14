@@ -1281,6 +1281,30 @@ test("should be able to bind to globals with {{bindAttr}}", function() {
   equal(view.$('img').attr('alt'), "Updated", "updates value");
 });
 
+test("should be able to bind class attribute using ternary operator in {{bindAttr}}", function() {
+  var template = Ember.Handlebars.compile('<img {{bindAttr class="content.isDisabled?disabled:enabled"}} />');
+  var content = Ember.Object.create({
+    isDisabled: true
+  });
+
+  view = Ember.View.create({
+    template: template,
+    content: content
+  });
+
+  appendView();
+
+  ok(view.$('img').hasClass('disabled'), 'disabled class is rendered');
+  ok(!view.$('img').hasClass('enabled'), 'enabled class is not rendered');
+
+  Ember.run(function() {
+    set(content, 'isDisabled', false);
+  });
+
+  ok(!view.$('img').hasClass('disabled'), 'disabled class is not rendered');
+  ok(view.$('img').hasClass('enabled'), 'enabled class is rendered');
+});
+
 test("should not allow XSS injection via {{bindAttr}}", function() {
   view = Ember.View.create({
     template: Ember.Handlebars.compile('<img src="test.jpg" {{bindAttr alt="content.value"}}>'),
@@ -1492,11 +1516,12 @@ test("should be able to bind boolean element attributes using {{bindAttr}}", fun
 });
 
 test("should be able to add multiple classes using {{bindAttr class}}", function() {
-  var template = Ember.Handlebars.compile('<div {{bindAttr class="content.isAwesomeSauce content.isAlsoCool content.isAmazing:amazing :is-super-duper"}}></div>');
+  var template = Ember.Handlebars.compile('<div {{bindAttr class="content.isAwesomeSauce content.isAlsoCool content.isAmazing:amazing :is-super-duper content.isEnabled?enabled:disabled"}}></div>');
   var content = Ember.Object.create({
     isAwesomeSauce: true,
     isAlsoCool: true,
-    isAmazing: true
+    isAmazing: true,
+    isEnabled: true
   });
 
   view = Ember.View.create({
@@ -1510,15 +1535,20 @@ test("should be able to add multiple classes using {{bindAttr class}}", function
   ok(view.$('div').hasClass('is-also-cool'), "dasherizes second property and sets classname");
   ok(view.$('div').hasClass('amazing'), "uses alias for third property and sets classname");
   ok(view.$('div').hasClass('is-super-duper'), "static class is present");
+  ok(view.$('div').hasClass('enabled'), "truthy class in ternary classname definition is rendered");
+  ok(!view.$('div').hasClass('disabled'), "falsy class in ternary classname definition is not rendered");
 
   Ember.run(function() {
     set(content, 'isAwesomeSauce', false);
     set(content, 'isAmazing', false);
+    set(content, 'isEnabled', false);
   });
 
   ok(!view.$('div').hasClass('is-awesome-sauce'), "removes dasherized class when property is set to false");
   ok(!view.$('div').hasClass('amazing'), "removes aliased class when property is set to false");
   ok(view.$('div').hasClass('is-super-duper'), "static class is still present");
+  ok(!view.$('div').hasClass('enabled'), "truthy class in ternary classname definition is not rendered");
+  ok(view.$('div').hasClass('disabled'), "falsy class in ternary classname definition is rendered");
 });
 
 test("should be able to bindAttr to 'this' in an {{#each}} block", function() {
