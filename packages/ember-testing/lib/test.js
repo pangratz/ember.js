@@ -6,7 +6,7 @@ var slice = [].slice,
     helpers = {},
     originalMethods = {},
     injectHelpersCallbacks = [],
-    Router = requireModule('router');
+    Router = requireModule('router')["default"];
 
 /**
   This is a container for an assortment of testing related functionality:
