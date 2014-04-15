@@ -406,4 +406,25 @@ test("bound helpers can handle `this` keyword when it's a non-object", function(
   equal(view.$().text(), 'wallace!', "helper output is correct");
 });
 
+test("usage of 'xxxBinding' in a Handlebars helper is deprecated", function() {
+  EmberHandlebars.helper("leHelper", function(options) {
+    return options.hash.value.toUpperCase();
+  });
 
+  view = EmberView.create({
+    controller: EmberObject.create({ leValue: "hello" }),
+    template: EmberHandlebars.compile('{{leHelper valueBinding="leValue"}}')
+  });
+
+  expectDeprecation(function() {
+    appendView();
+  }, '`valueBinding="leValue"` in a Handlebars helper is deprecated; use `value=leValue` instead');
+
+  equal(view.$().text(), 'HELLO', "xxxBinding is a Handlebars helper is deprecated but supported");
+
+  run(function() {
+    view.controller.set("leValue", "world");
+  });
+
+  equal(view.$().text(), 'WORLD', "value is updated");
+});

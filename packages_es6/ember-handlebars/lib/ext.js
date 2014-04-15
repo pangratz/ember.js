@@ -405,7 +405,10 @@ function makeBoundHelper(fn) {
     for (hashOption in hash) {
       if (IS_BINDING.test(hashOption)) {
         // Lop off 'Binding' suffix.
-        boundOptions[hashOption.slice(0, -7)] = hash[hashOption];
+        var prop = hashOption.slice(0, -7);
+        var path = hash[hashOption];
+        boundOptions[prop] = path;
+        Ember.deprecate(fmt('`%@1Binding="%@2"` in a Handlebars helper is deprecated; use `%@1=%@2` instead', [prop, path]));
       }
     }
 
